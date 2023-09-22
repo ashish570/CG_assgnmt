@@ -13,8 +13,6 @@ def create_database():
     status = 'failed'
     execution_log = f'execution of create_database -  failed -  with error {str(execution_error)}'
   return status,execution_log
-create_database = create_database()
-create_database[0]  
 
 # COMMAND ----------
 
@@ -31,7 +29,7 @@ def bronze_table_creation():
   except Exception as e:
     status = 'failed'
     execution_log = f'Bronze table creation - failed -  with error {str(execution_error)}'
-
+  return status,execution_log
 
 # COMMAND ----------
 
@@ -243,7 +241,8 @@ def orch():
   except Exception as execution_error:
       status = 'failed'
       execution_log = f"orchestrator failed -- Kindly check the log here {execution_error}"
-
+  return status,execution_log
+  
 ## initiating orchestrator
 orch_exe = orch()
 print(orch_exe)
