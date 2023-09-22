@@ -3,7 +3,8 @@ Data Platform design and implantation for vacation home data analysis
 
 ##Important note
 
-![dataPlatformDesign.jpg]
+![Screenshot](dataPlatformDesign.jpg)
+
 ```python
 import foobar
 ## Contributing
