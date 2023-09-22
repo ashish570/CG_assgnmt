@@ -126,7 +126,7 @@ def create_gold_tables():
 # COMMAND ----------
 
 # ##inserting into listing table
-def update_listing(tgt_tbl = 'xyz_silver.listing',src_tbl = 'v_listing',ref_tbl = 'v_list_det'):  
+def update_listing(tgt_tbl = 'xyz_silver.listing',src_tbl = 'xyz_bronze.listings',ref_tbl = 'xyz_bronze.listings_details'):  
   status = ''
   execution_log = ''
   try:
@@ -154,7 +154,7 @@ def update_listing(tgt_tbl = 'xyz_silver.listing',src_tbl = 'v_listing',ref_tbl 
   return status,execution_log
 
 ##inserting into listing table
-def update_neighbourhood(tgt_tbl = 'xyz_silver.neighbourhoods',src_tbl = 'v_ngh'):  
+def update_neighbourhood(tgt_tbl = 'xyz_silver.neighbourhoods',src_tbl = 'xyz_bronze.neighbourhoods'):  
   status = ''
   execution_log = ''
   try:
@@ -175,31 +175,31 @@ def update_neighbourhood(tgt_tbl = 'xyz_silver.neighbourhoods',src_tbl = 'v_ngh'
   return status,execution_log
 
   ###inserting into reviews table 
-  def update_reviews(tgt_tbl = 'xyz_silver.reviews',src_tbl = 'v_reviews',ref_tbl ='v_rev_det'):
-    status = ''
-    execution_log = ''
-    try:
-      spark.sql(f'''INSERT into {tgt_tbl}
-                  select  rd.id as review_id, 
-                        r.listing_id as listing_id,
-                        rd.reviewer_id as user_id,  
-                        rd.comments as review_text,
-                        null as rating,
-                        r.date as review_date 
-                  from {src_tbl} r 
-                  inner join 
-                  {ref_tbl} rd on r.listing_id = rd.listing_id and r.date = rd.date
-                  where rd.listing_id is not null
-                  and rd.date is not null
-                ''')
-      status = 'success'
-      execution_log = f'execution of update_reviews -  succeeded - {tgt_tbl}  created '
-    except Exception as execution_error:
-      status = 'failed'
-      execution_log = f'execution of update_reviews -  failed -  with error {str(execution_error)}'
-    return status,execution_log
+def update_reviews(tgt_tbl = 'xyz_silver.reviews',src_tbl = 'xyz_bronze.reviews',ref_tbl ='xyz_bronze.reviews_details'):
+  status = ''
+  execution_log = ''
+  try:
+    spark.sql(f'''INSERT into {tgt_tbl}
+                select  rd.id as review_id, 
+                      r.listing_id as listing_id,
+                      rd.reviewer_id as user_id,  
+                      rd.comments as review_text,
+                      null as rating,
+                      r.date as review_date 
+                from {src_tbl} r 
+                inner join 
+                {ref_tbl} rd on r.listing_id = rd.listing_id and r.date = rd.date
+                where rd.listing_id is not null
+                and rd.date is not null
+              ''')
+    status = 'success'
+    execution_log = f'execution of update_reviews -  succeeded - {tgt_tbl}  created '
+  except Exception as execution_error:
+    status = 'failed'
+    execution_log = f'execution of update_reviews -  failed -  with error {str(execution_error)}'
+  return status,execution_log
 
-def update_ListingDates(tgt_tbl = 'xyz_silver.ListingDates',src_tbl = 'v_cal'):
+def update_ListingDates(tgt_tbl = 'xyz_silver.ListingDates',src_tbl = 'xyz_bronze.calendar'):
   status = ''
   execution_log = ''
   try:
@@ -213,7 +213,6 @@ def update_ListingDates(tgt_tbl = 'xyz_silver.ListingDates',src_tbl = 'v_cal'):
     status = 'failed'
     execution_log = f'execution of update_ListingDates -  failed -  with error {str(execution_error)}'
   return status,execution_log
-
 
 
 # COMMAND ----------
