@@ -21,6 +21,41 @@ The diagram below shows the basic architecture of the data platform.
   *Ingestion Pipeline on DataFactory (onboards new data)*
 ==>> *Orchestration notebook on DataBricks to update the data in the tables*<br>
 
+### Project code
+It resides in the orchestrator notebook, which has below functions
+```python
+def orch():
+  status = ""
+  execution_log = ""
+  try:
+    create_database = create_database()
+    if all([create_database[0] == 'success']):
+      try:
+            create_bronze_table = bronze_table_creation()
+            create_silver_tables = create_silver_tables()
+            listing= update_listing()
+            neighbourhood = update_neighbourhood()
+            reviews = update_reviews()
+            listing_dates = update_ListingDates()
+            if all([create_bronze_table[0] == create_silver_tables[0] == listing[0] == neighbourhood [0] == reviews[0] == listing_dates[0] == 'success']):
+              status = 'success'
+              execution_log = "bronze and silver table creation succeeded "
+      except Exception as e:
+        status = 'failed'
+        execution_log = f"bronze and/or silver table creation failed, check log here {e} "
+    else:
+      status = 'failed'
+      execution_log = f'Database creation failed'    
+  except Exception as execution_error:
+      status = 'failed'
+      execution_log = f"orchestrator failed -- Kindly check the log here {execution_error}"
+
+## initiating orchestrator
+orch_exe = orch()
+print(orch_exe)
+
+```
+
 
 ### Additional Actions 
 * Additional Data Quality checks can be implemented at Silver layer tables, which will make sure business can be aware of data quality rules and can be assured of the correct data getting to the gold layer.
