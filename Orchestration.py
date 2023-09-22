@@ -80,7 +80,48 @@ def create_silver_tables():
     status = 'failed'
     execution_log = f'execution of create_silver_tables -  failed -  with error {str(execution_error)}'
   return status,execution_log
-#create_silver_tables()
+
+##### Gold table creation
+def create_gold_tables():
+  status = ''
+  execution_log = ''
+  try:
+    ## Table Market Trends
+    spark.sql(f'''CREATE OR REPLACE TABLE xyz_gold.market_trends (
+                  trend_id INT ,
+                  date DATE,
+                  average_price DECIMAL(10, 2),
+                  occupancy_rate DECIMAL(5, 2),
+                  average_rating DECIMAL(3, 2)) USING DELTA
+                  ''')
+    
+    ## Table property type statstics
+    spark.sql('''CREATE TABLE xyz_gold.property_type_statistics (
+                property_type VARCHAR(255) ,
+                total_listings INT,
+                average_price DECIMAL(10, 2),
+                average_rating DECIMAL(3, 2)) USING DELTA
+              ''')
+    ## Table Neighborhood Statistics Table
+    spark.sql('''CREATE TABLE xyz_gold.neighborhood_statistics (
+                  neighborhood_id INT ,
+                  total_listings INT,
+                  average_price DECIMAL(10, 2),
+                  average_rating DECIMAL(3, 2)) USING DELTA
+              ''')
+    spark.sql('''CREATE TABLE xyz_gold.user_engagement (
+                  user_id INT,
+                  total_reviews INT,
+                  average_rating_given DECIMAL(3, 2),
+                  favorite_neighborhood VARCHAR(255))USING DELTA
+              ''')
+    status = 'success'
+    execution_log = f'execution of create_gold_tables -  succeeded '
+  except Exception as execution_error:
+    status = 'failed'
+    execution_log = f'execution of create_gold_tables -  failed -  with error {str(execution_error)}'
+  return status,execution_log
+
 
 # COMMAND ----------
 
