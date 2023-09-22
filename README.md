@@ -22,7 +22,8 @@ The diagram below shows the basic architecture of the data platform.
 ==>> *Orchestration notebook on DataBricks to update the data in the tables*<br>
 
 ### Project code
-It resides in the orchestrator notebook, which has below functions
+It resides in the orchestrator notebook, which has below functions :
+**For complete code kindly refer the [a link] Orchestration.py
 ```python
 def orch():
   status = ""
