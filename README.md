@@ -38,7 +38,7 @@ def orch():
             neighbourhood = update_neighbourhood()
             reviews = update_reviews()
             listing_dates = update_ListingDates()
-            if all([create_bronze_table[0] == create_silver_tables[0] == listing[0] == neighbourhood [0] == reviews[0] == listing_dates[0] == 'success']):
+            if all([create_bronze_table[0] == create_silver_tables[0] == create_gold_tables[0] == listing[0] == neighbourhood [0] == reviews[0] == listing_dates[0] == 'success']):
               status = 'success'
               execution_log = "bronze and silver table creation succeeded "
       except Exception as e:
